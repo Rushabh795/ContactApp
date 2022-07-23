@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_gravity="center"
+    android:background="@drawable/app_bg"
     tools:context=".MainActivity">
 
 
@@ -14,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:padding="20dp"
-        android:background="#fece2f">
+        >
 
         <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/profile_image"
@@ -30,27 +31,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="Rushabh Shah"
-            android:textColor="@color/black"
-            android:textSize="25sp"
-            android:layout_toRightOf="@+id/profile_image"
             android:layout_marginLeft="20dp"
-            android:fontFamily="sans-serif">
-        </TextView>
+            android:layout_toRightOf="@+id/profile_image"
+            android:fontFamily="sans-serif"
+            android:text="Rushabh Shah"
+            android:textColor="@color/white"
+            android:textSize="25sp"></TextView>
 
         <TextView
             android:id="@+id/tvLastName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="Mr Shah"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            android:layout_toRightOf="@+id/profile_image"
             android:layout_below="@+id/tvName"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/profile_image"
             android:fontFamily="sans-serif-light"
-            ></TextView>
+            android:text="Mr Shah"
+            android:textColor="@color/white"
+            android:textSize="20sp"></TextView>
 
 
     </RelativeLayout>
@@ -185,7 +184,7 @@ android:background="#fece2f"
     <com.google.android.material.card.MaterialCardView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="#fece2f"
+        app:cardBackgroundColor="@color/white"
         app:cardElevation="10dp"
         android:layout_margin="10dp">
         <RelativeLayout
@@ -194,7 +193,7 @@ android:background="#fece2f"
             android:padding="20dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:background="#fece2f">
+            android:background="@color/white">
 
             <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/imgCall"
@@ -239,7 +238,7 @@ android:background="#fece2f"
     <com.google.android.material.card.MaterialCardView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="#fece2f"
+        app:cardBackgroundColor="@color/white"
         app:cardElevation="10dp"
         android:layout_margin="10dp">
         <RelativeLayout
@@ -248,7 +247,7 @@ android:background="#fece2f"
             android:padding="20dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:background="#fece2f">
+          >
 
             <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/imgEmail"
@@ -293,7 +292,7 @@ android:background="#fece2f"
     <com.google.android.material.card.MaterialCardView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="#fece2f"
+        app:cardBackgroundColor="@color/white"
         app:cardElevation="10dp"
         android:layout_margin="10dp">
         <RelativeLayout
@@ -302,7 +301,7 @@ android:background="#fece2f"
             android:padding="20dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:background="#fece2f">
+           >
 
             <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/imgAddress"
