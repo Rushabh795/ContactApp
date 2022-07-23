@@ -66,6 +66,15 @@
                 fab:fab_size="mini"
                 fab:fab_label="Dial"/>
 
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fabEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_dialpad"
+                fab:fab_size="mini"
+                fab:fab_label="Dial"/>
+
+
         </com.github.clans.fab.FloatingActionMenu>
     </FrameLayout>
 </LinearLayout>

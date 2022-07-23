@@ -10,9 +10,11 @@
         <entry key="app/src/main/res/drawable/ic_person.xml" value="0.1115" />
         <entry key="app/src/main/res/drawable/ic_person_add.xml" value="0.1115" />
         <entry key="app/src/main/res/drawable/ic_phone.xml" value="0.1115" />
+        <entry key="app/src/main/res/drawable/ic_save.xml" value="0.1115" />
         <entry key="app/src/main/res/drawable/ic_touch.xml" value="0.1115" />
         <entry key="app/src/main/res/layout/activity_add_contact.xml" value="0.23180999755859377" />
         <entry key="app/src/main/res/layout/activity_contact_details.xml" value="0.19610507246376813" />
+        <entry key="app/src/main/res/layout/activity_dialer.xml" value="0.20292358398437502" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.19610507246376813" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.1" />
         <entry key="app/src/main/res/menu/menu_main.xml" value="0.1" />
