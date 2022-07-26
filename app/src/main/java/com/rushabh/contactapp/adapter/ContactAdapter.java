@@ -1,5 +1,6 @@
-package com.gtappdevelopers.firebasecrudapp;
+package com.rushabh.contactapp.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,46 +9,48 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.rushabh.contactapp.R;
+import com.rushabh.contactapp.data.Contact;
 import java.util.ArrayList;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder> {
     // creating variables for our list, context, interface and position.
-    private ArrayList<ContactAdapter> contactArrayList;
+    private ArrayList<Contact> arrContactList;
     private Context context;
-    private ContactClickInterface courseClickInterface;
+    private ContactInterface contactInterface;
     int lastPos = -1;
 
     // creating a constructor.
-    public ContactAdapter(ArrayList<ContactAdapter> courseRVModalArrayList, Context context, ContactClickInterface courseClickInterface) {
-        this.contactArrayList = courseRVModalArrayList;
+    public ContactAdapter(ArrayList<Contact> arrContactList, Context context, ContactInterface contactInterface) {
+        this.arrContactList = arrContactList;
         this.context = context;
-        this.courseClickInterface = courseClickInterface;
+        this.contactInterface = contactInterface;
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ContactAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // inflating our layout file on below line.
         View view = LayoutInflater.from(context).inflate(R.layout.contact_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ContactAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ContactAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         // setting data to our recycler view item on below line.
-        ContactAdapter courseRVModal = contactArrayList.get(position);
-        holder.courseTV.setText(courseRVModal.get());
-        holder.coursePriceTV.setText("Rs. " + courseRVModal.getCoursePrice());
-        Picasso.get().load(courseRVModal.getCourseImg()).into(holder.courseIV);
+        Contact contact = arrContactList.get(position);
+        holder.tvContactName.setText(contact.getStrFirstName() +" " +contact.getStrLastName());
+//        Picasso.get().load(contact.get()).into(holder.courseIV);
         // adding animation to recycler view item on below line.
         setAnimation(holder.itemView, position);
-        holder.courseIV.setOnClickListener(new View.OnClickListener() {
+        holder.tvContactName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                courseClickInterface.onCourseClick(position);
+                contactInterface.onCourseClick(position);
             }
         });
     }
@@ -63,25 +66,24 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        return courseRVModalArrayList.size();
+        return arrContactList.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // creating variable for our image view and text view on below line.
-        private ImageView courseIV;
-        private TextView courseTV, coursePriceTV;
+        private ImageView idIVContact;
+        private TextView tvContactName;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             // initializing all our variables on below line.
-            courseIV = itemView.findViewById(R.id.idIVContact);
-            courseTV = itemView.findViewById(R.id.idTVCOurseName);
-            coursePriceTV = itemView.findViewById(R.id.idTVCousePrice);
+            idIVContact = itemView.findViewById(R.id.idIVContact);
+            tvContactName = itemView.findViewById(R.id.tvContactName);
         }
     }
 
     // creating a interface for on click
-    public interface ContactClickInterface {
+    public interface ContactInterface {
         void onCourseClick(int position);
     }
 }
