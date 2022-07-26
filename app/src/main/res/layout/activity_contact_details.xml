@@ -29,10 +29,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
+            android:layout_marginTop="5dp"
             android:layout_toRightOf="@+id/profile_image"
             android:fontFamily="sans-serif"
-            android:layout_marginTop="5dp"
-            android:text="Rushabh Shah"
+            android:text=" "
             android:textColor="@color/white"
             android:textSize="20sp"></TextView>
 
@@ -188,6 +188,7 @@ android:background="#fece2f"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                 <com.google.android.material.textfield.TextInputEditText
+                   android:id="@+id/edMobileNumber"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:editable="false"
@@ -196,12 +197,6 @@ android:background="#fece2f"
                     android:inputType="phone">
                 </com.google.android.material.textfield.TextInputEditText>
             </com.google.android.material.textfield.TextInputLayout>
-
-
-
-
-
-
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -216,6 +211,7 @@ android:background="#fece2f"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                 <com.google.android.material.textfield.TextInputEditText
+                   android:id="@+id/edEmail"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textEmailAddress"
@@ -243,6 +239,7 @@ android:background="#fece2f"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edAddress"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPostalAddress"

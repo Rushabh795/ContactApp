@@ -11,14 +11,14 @@
         android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/idRVCourses"
+            android:id="@+id/rvContact"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:listitem="@layout/contact_item" />
 
         <!--progress bar for loading indicator-->
         <ProgressBar
-            android:id="@+id/idPBLoading"
+            android:id="@+id/igProgress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

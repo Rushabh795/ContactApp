@@ -30,7 +30,8 @@ public class AddContactActivity extends AppCompatActivity {
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     private ProgressBar savePB;
-    private String strContactID;
+    long lngContactID=0;
+    Contact contact;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,9 +47,27 @@ public class AddContactActivity extends AppCompatActivity {
         edEmail = findViewById(R.id.edEmail);
         edAddress = findViewById(R.id.edAddress);
         btSave= findViewById(R.id.btSave);
-        firebaseDatabase = FirebaseDatabase.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance("https://contact-bb046-default-rtdb.firebaseio.com/");
+        contact = new Contact();
         // on below line creating our database reference.
-        databaseReference = firebaseDatabase.getReference("Contact");
+        databaseReference = firebaseDatabase.getReference().child("Contact");
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // on below line we are setting data in our firebase database.
+                if(snapshot.exists())
+
+                    lngContactID=(snapshot.getChildrenCount());
+                }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // displaying a failure message on below line.
+                Toast.makeText(AddContactActivity.this, "Fail to add Course..", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         btSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -56,26 +75,19 @@ public class AddContactActivity extends AppCompatActivity {
                 String strFirstName = edFirstName.getText().toString();
                 String strLastName = edLastname.getText().toString();
                 String strMobileNumber = edMobileNumber.getText().toString();
-                String strEmail = edAddress.getText().toString();
-                String strAddress = edFirstName.getText().toString();
-                Contact contact = new Contact(strFirstName,strLastName,strMobileNumber,strEmail,strAddress);
-                databaseReference.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        // on below line we are setting data in our firebase database.
-                        databaseReference.child(strContactID).setValue(contact);
-                        // displaying a toast message.
-                        Toast.makeText(AddContactActivity.this, "Contact Saved", Toast.LENGTH_SHORT).show();
-                        // starting a main activity.
-                        startActivity(new Intent(AddContactActivity.this, MainActivity.class));
-                    }
+                String strEmail = edEmail.getText().toString();
+                String strAddress = edAddress.getText().toString();
+                contact.setStrFirstName(strFirstName);
+                contact.setStrLastName(strLastName);
+                contact.setStrMobileNum(strMobileNumber);
+                contact.setStrEmail(strEmail);
+                contact.setStrAdd(strAddress);
+                databaseReference.child(String.valueOf(lngContactID+1)).setValue(contact);
+                // displaying a toast message.
+                Toast.makeText(AddContactActivity.this, "Contact Saved", Toast.LENGTH_SHORT).show();
+                // starting a main activity.
+                startActivity(new Intent(AddContactActivity.this, MainActivity.class));
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        // displaying a failure message on below line.
-                        Toast.makeText(AddContactActivity.this, "Fail to add Course..", Toast.LENGTH_SHORT).show();
-                    }
-                });
             }
         });
     }

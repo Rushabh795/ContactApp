@@ -2,6 +2,8 @@ package com.rushabh.contactapp.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.rushabh.contactapp.ContactDetailsActivity;
 import com.rushabh.contactapp.R;
 import com.rushabh.contactapp.data.Contact;
 import java.util.ArrayList;
@@ -44,6 +47,32 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         // setting data to our recycler view item on below line.
         Contact contact = arrContactList.get(position);
         holder.tvContactName.setText(contact.getStrFirstName() +" " +contact.getStrLastName());
+        holder.tvContactNumber.setText(contact.getStrMobileNum());
+        holder.imgCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", contact.getStrMobileNum(), null));
+                context.startActivity(intent);
+
+            }
+        });
+        holder.imgEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(context, ContactDetailsActivity.class);
+                // on below line we are passing our contact modal
+                i.putExtra("contact_FullName", contact.getStrFirstName().toString() + " " + contact.getStrLastName().toString());
+                i.putExtra("contact_Mobile", contact.getStrMobileNum().toString() );
+                i.putExtra("contact_Email", contact.getStrEmail().toString() );
+                i.putExtra("contact_Address", contact.getStrAdd().toString() );
+                i.putExtra("contact_Firstname", contact.getStrFirstName().toString());
+                i.putExtra("contact_LastName", contact.getStrLastName().toString() );
+                context.startActivity(i);
+
+            }
+        });
+
+
 //        Picasso.get().load(contact.get()).into(holder.courseIV);
         // adding animation to recycler view item on below line.
         setAnimation(holder.itemView, position);
@@ -71,14 +100,17 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // creating variable for our image view and text view on below line.
-        private ImageView idIVContact;
-        private TextView tvContactName;
+        private ImageView idIVContact,imgCall,imgEdit;
+        private TextView tvContactName,tvContactNumber;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             // initializing all our variables on below line.
             idIVContact = itemView.findViewById(R.id.idIVContact);
             tvContactName = itemView.findViewById(R.id.tvContactName);
+            tvContactNumber = itemView.findViewById(R.id.tvContactNumber);
+            imgCall = itemView.findViewById(R.id.imgCall);
+            imgEdit= itemView.findViewById(R.id.imgEdit);
         }
     }
 
