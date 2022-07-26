@@ -190,6 +190,9 @@ android:background="#fece2f"
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:editable="false"
+                    android:enabled="false"
+                    android:focusableInTouchMode="false"
                     android:inputType="phone">
                 </com.google.android.material.textfield.TextInputEditText>
             </com.google.android.material.textfield.TextInputLayout>
@@ -215,7 +218,10 @@ android:background="#fece2f"
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress">
+                    android:inputType="textEmailAddress"
+                    android:editable="false"
+                    android:enabled="false"
+                    android:focusableInTouchMode="false">
                 </com.google.android.material.textfield.TextInputEditText>
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -239,7 +245,10 @@ android:background="#fece2f"
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPostalAddress">
+                    android:inputType="textPostalAddress"
+                    android:editable="false"
+                    android:enabled="false"
+                    android:focusableInTouchMode="false">
                 </com.google.android.material.textfield.TextInputEditText>
             </com.google.android.material.textfield.TextInputLayout>
 
