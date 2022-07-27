@@ -7,11 +7,22 @@ import com.google.firebase.database.Exclude;
 
 import java.io.Serializable;
 
-public class Contact {
+public class Contact  {
     // creating variables for our different fields.
-
+    @Exclude
+    private String id;
     private String strFirstName;
     private String strLastName;
+
+    public String getStrNickName() {
+        return strNickName;
+    }
+
+    public void setStrNickName(String strNickName) {
+        this.strNickName = strNickName;
+    }
+
+    private String strNickName;
     private String strMobileNum;
     private String strEmail;
     private String strAdd;
@@ -20,6 +31,13 @@ public class Contact {
     }
 
     // creating getter and setter methods.
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getStrFirstName() {
         return strFirstName;

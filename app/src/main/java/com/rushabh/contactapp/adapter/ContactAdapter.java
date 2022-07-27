@@ -61,12 +61,15 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
             public void onClick(View v) {
                 Intent i = new Intent(context, ContactDetailsActivity.class);
                 // on below line we are passing our contact modal
+//                i.putExtra("ID", contact.getId().toString());
                 i.putExtra("contact_FullName", contact.getStrFirstName().toString() + " " + contact.getStrLastName().toString());
                 i.putExtra("contact_Mobile", contact.getStrMobileNum().toString() );
                 i.putExtra("contact_Email", contact.getStrEmail().toString() );
                 i.putExtra("contact_Address", contact.getStrAdd().toString() );
                 i.putExtra("contact_Firstname", contact.getStrFirstName().toString());
                 i.putExtra("contact_LastName", contact.getStrLastName().toString() );
+                i.putExtra("contact_NickName", contact.getStrNickName().toString() );
+
                 context.startActivity(i);
 
             }

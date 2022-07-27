@@ -13,6 +13,8 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
@@ -25,13 +27,15 @@ import com.google.firebase.database.ValueEventListener;
 import com.rushabh.contactapp.data.Contact;
 
 public class AddContactActivity extends AppCompatActivity {
-    TextInputEditText edFirstName , edLastname ,edMobileNumber , edEmail ,edAddress ;
+    TextInputEditText edFirstName , edLastname ,edNickName, edMobileNumber , edEmail ,edAddress ;
     MaterialButton btSave;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     private ProgressBar savePB;
-    long lngContactID=0;
+   public long lngContactID=0;
     Contact contact;
+    boolean isAllFieldsChecked = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +47,7 @@ public class AddContactActivity extends AppCompatActivity {
     private void bindID() {
         edFirstName = findViewById(R.id.edFirstName);
         edLastname = findViewById(R.id.edLastName);
+        edNickName= findViewById(R.id.edNickName);
         edMobileNumber = findViewById(R.id.edMobileNumber);
         edEmail = findViewById(R.id.edEmail);
         edAddress = findViewById(R.id.edAddress);
@@ -68,29 +73,46 @@ public class AddContactActivity extends AppCompatActivity {
             }
         });
 
+
         btSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                String strFirstName = edFirstName.getText().toString();
-                String strLastName = edLastname.getText().toString();
-                String strMobileNumber = edMobileNumber.getText().toString();
-                String strEmail = edEmail.getText().toString();
-                String strAddress = edAddress.getText().toString();
-                contact.setStrFirstName(strFirstName);
-                contact.setStrLastName(strLastName);
-                contact.setStrMobileNum(strMobileNumber);
-                contact.setStrEmail(strEmail);
-                contact.setStrAdd(strAddress);
-                databaseReference.child(String.valueOf(lngContactID+1)).setValue(contact);
-                // displaying a toast message.
-                Toast.makeText(AddContactActivity.this, "Contact Saved", Toast.LENGTH_SHORT).show();
-                // starting a main activity.
-                startActivity(new Intent(AddContactActivity.this, MainActivity.class));
-
+                isAllFieldsChecked = CheckAllFields();
+                if (isAllFieldsChecked) {
+                    String strFirstName = edFirstName.getText().toString();
+                    String strLastName = edLastname.getText().toString();
+                    String strMobileNumber = edMobileNumber.getText().toString();
+                    String strEmail = edEmail.getText().toString();
+                    String strAddress = edAddress.getText().toString();
+                    String strNickName = edNickName.getText().toString();
+                    contact.setStrFirstName(strFirstName);
+                    contact.setStrLastName(strLastName);
+                    contact.setStrNickName(strNickName);
+                    contact.setStrMobileNum(strMobileNumber);
+                    contact.setStrEmail(strEmail);
+                    contact.setStrAdd(strAddress);
+//                contact.setId(String.valueOf(lngContactID+1));
+                    databaseReference.child(String.valueOf(lngContactID + 1)).setValue(contact);
+                    // displaying a toast message.
+                    Toast.makeText(AddContactActivity.this, "Contact Saved", Toast.LENGTH_SHORT).show();
+                    // starting a main activity.
+                    startActivity(new Intent(AddContactActivity.this, MainActivity.class));
+                }
             }
         });
     }
+    private boolean CheckAllFields() {
+        if (edFirstName.length() == 0) {
+            edFirstName.setError("This field is required");
+            return false;
+        }
 
+        if (edMobileNumber.length() == 0) {
+            edMobileNumber.setError("This field is required");
+            return false;
+        }
+        return true;
+    }
 
 }

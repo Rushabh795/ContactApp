@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.google.firebase.database.ChildEventListener;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     FloatingActionButton fabAddNew , fabDialer , fabEdit;
+    private SwipeRefreshLayout pullToRefresh ;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     private RecyclerView rvContact;
@@ -44,17 +46,17 @@ public class MainActivity extends AppCompatActivity {
         fabEdit = findViewById(R.id.fabEdit);
         rvContact= findViewById(R.id.rvContact);
         igProgress= findViewById(R.id.igProgress);
-        firebaseDatabase = FirebaseDatabase.getInstance("https://contact-bb046-default-rtdb.firebaseio.com/");
-        arrContact = new ArrayList<>();
-        // on below line we are getting database reference.
-        databaseReference = firebaseDatabase.getReference().child("Contact");
-        apContact = new ContactAdapter(arrContact, this, this::onContactClick);
-        // setting layout malinger to recycler view on below line.
-        rvContact.setLayoutManager(new LinearLayoutManager(this));
-        // setting adapter to recycler view on below line.
-        rvContact.setAdapter(apContact);
-        // on below line calling a method to fetch courses from database.
-        getContact();
+        pullToRefresh = findViewById(R.id.pullToRefresh);
+        setData();
+        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                setData();
+                pullToRefresh.setRefreshing(false);
+
+            }
+        });
+
         fabAddNew.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -82,8 +84,23 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void setData() {
+        firebaseDatabase = FirebaseDatabase.getInstance("https://contact-bb046-default-rtdb.firebaseio.com/");
+        arrContact = new ArrayList<>();
+        // on below line we are getting database reference.
+        databaseReference = firebaseDatabase.getReference().child("Contact");
+        apContact = new ContactAdapter(arrContact, this, this::onContactClick);
+        // setting layout malinger to recycler view on below line.
+        rvContact.setLayoutManager(new LinearLayoutManager(this));
+        // setting adapter to recycler view on below line.
+        rvContact.setAdapter(apContact);
+        // on below line calling a method to fetch courses from database.
+        getContact();
+    }
+
     private void getContact() {
         arrContact.clear();
+        igProgress.setVisibility(View.GONE);
         // on below line we are calling add child event listener method to read the data.
         databaseReference.addChildEventListener(new ChildEventListener() {
             @Override
@@ -124,7 +141,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                apContact.notifyDataSetChanged();
+                igProgress.setVisibility(View.GONE);
             }
         });
     }
