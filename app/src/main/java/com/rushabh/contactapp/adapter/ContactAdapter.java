@@ -53,9 +53,10 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         holder.tvContactNumber.setText(contact.getStrMobileNum());
 if(contact.getStrImagePath().trim().equals(""))
 {
+    holder.idIVContact.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_person));
 
 }else {
-    Picasso.get().load(contact.getStrImagePath()).into(holder.idIVContact);
+    Picasso.get().load(contact.getStrImagePath()).rotate(270f).into(holder.idIVContact);
 }
         holder.imgCall.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,6 +79,8 @@ if(contact.getStrImagePath().trim().equals(""))
                 i.putExtra("contact_Firstname", contact.getStrFirstName().toString());
                 i.putExtra("contact_LastName", contact.getStrLastName().toString() );
                 i.putExtra("contact_NickName", contact.getStrNickName().toString() );
+                i.putExtra("contact_Image", contact.getStrImagePath().toString() );
+
 
                 context.startActivity(i);
 

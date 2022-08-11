@@ -15,42 +15,16 @@
         android:layout_height="180dp"
         android:layout_gravity="center"
         android:gravity="center"
-        android:background="@drawable/app_bg">
+       >
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profile_image"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:src="@drawable/ic_addimg"
-            app:civ_border_color="#FF000000" />
-
-        <TextView
-            android:id="@+id/tvName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="5dp"
-            android:layout_toRightOf="@+id/profile_image"
-            android:fontFamily="sans-serif"
-            android:text=" "
-            android:textColor="@color/white"
-            android:textSize="20sp"></TextView>
-
-        <TextView
-            android:id="@+id/tvNickName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tvName"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="20dp"
-            android:layout_toRightOf="@+id/profile_image"
-            android:fontFamily="sans-serif-light"
-            android:text="Mr Shah"
-            android:textColor="@color/white"
-            android:textSize="15sp"></TextView>
-
-
+<ImageView  android:id="@+id/ivProfile"
+            android:layout_width="fill_parent"
+            android:layout_height="180dp"
+           />
     </RelativeLayout>
+
+
+
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -172,6 +146,63 @@ android:background="#fece2f"
             android:padding="10dp"
             android:layout_marginBottom="10dp"
             >
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1">
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:hint="Last Name"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_weight="0.5"
+                    android:layout_marginRight="15dp"
+                    android:textColorHint="@color/black"
+                    android:textColor="@color/black"
+                    app:startIconDrawable="@drawable/ic_person"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/tvName"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:editable="false"
+                        android:enabled="false"
+                        android:focusableInTouchMode="false"
+                        android:inputType="text">
+                    </com.google.android.material.textfield.TextInputEditText>
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:hint="Nick Name"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_weight="0.5"
+                    android:layout_marginRight="15dp"
+                    android:textColorHint="@color/black"
+                    android:textColor="@color/black"
+                    app:startIconDrawable="@drawable/ic_person"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/tvNickName"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:editable="false"
+                        android:enabled="false"
+                        android:focusableInTouchMode="false"
+                        android:inputType="text">
+                    </com.google.android.material.textfield.TextInputEditText>
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+
+            </LinearLayout>
+
+
 
 
             <com.google.android.material.textfield.TextInputLayout
@@ -180,7 +211,6 @@ android:background="#fece2f"
                 android:hint="Mobile Number"
                 android:textColorHint="@color/white"
                 android:textColor="@color/white"
-
                 android:layout_marginTop="15dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"

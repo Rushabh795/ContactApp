@@ -180,7 +180,7 @@ public class AddContactActivity extends AppCompatActivity {
                 // Get the Image from data
                  selectedImage = data.getData();
                  if(selectedImage != null) {
-                     Picasso.get().load(selectedImage).into(imgProfilePic);
+                     Picasso.get().load(selectedImage).rotate(270f).into(imgProfilePic);
                      strFileName = System.currentTimeMillis() + "." +getFileExt(selectedImage);
                      SharedPrefManager.putString("ImageFileName",strFileName);
                      uploadFile();
