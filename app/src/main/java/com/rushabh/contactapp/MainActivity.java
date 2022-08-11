@@ -2,7 +2,9 @@ package com.rushabh.contactapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
@@ -20,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.annotations.Nullable;
 import com.rushabh.contactapp.adapter.ContactAdapter;
 import com.rushabh.contactapp.data.Contact;
+import com.rushabh.contactapp.data.SharedPrefManager;
 
 import java.util.ArrayList;
 
@@ -32,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Contact> arrContact;
     private ContactAdapter apContact;
     private ProgressBar igProgress;
+    int itCount = 0;
 
 
     @Override
@@ -47,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         rvContact= findViewById(R.id.rvContact);
         igProgress= findViewById(R.id.igProgress);
         pullToRefresh = findViewById(R.id.pullToRefresh);
+        SharedPrefManager.init(MainActivity.this);
         setData();
         pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -56,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
         fabAddNew.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -94,8 +98,17 @@ public class MainActivity extends AppCompatActivity {
         rvContact.setLayoutManager(new LinearLayoutManager(this));
         // setting adapter to recycler view on below line.
         rvContact.setAdapter(apContact);
+//        itCount =  apContact.getItemCount();
+//        SharedPrefManager.putInt("ID",itCount);
         // on below line calling a method to fetch courses from database.
         getContact();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        itCount =  apContact.getItemCount();
+//        SharedPrefManager.putInt("ID",itCount);
     }
 
     private void getContact() {
@@ -109,8 +122,11 @@ public class MainActivity extends AppCompatActivity {
                 igProgress.setVisibility(View.GONE);
                 // adding snapshot to our array list on below line.
                 arrContact.add(snapshot.getValue(Contact.class));
+               String strName =  snapshot.getKey().toString();
                 // notifying our adapter that data has changed.
                 apContact.notifyDataSetChanged();
+//                itCount =  apContact.getItemCount();
+//                SharedPrefManager.putInt("ID",itCount);
             }
 
             @Override
@@ -120,6 +136,8 @@ public class MainActivity extends AppCompatActivity {
                 // visibility as gone.
                 igProgress.setVisibility(View.GONE);
                 apContact.notifyDataSetChanged();
+//                itCount =  apContact.getItemCount();
+//                SharedPrefManager.putInt("ID",itCount);
             }
 
             @Override
@@ -127,6 +145,8 @@ public class MainActivity extends AppCompatActivity {
                 // notifying our adapter when child is removed.
                 apContact.notifyDataSetChanged();
                 igProgress.setVisibility(View.GONE);
+//                itCount =  apContact.getItemCount();
+//                SharedPrefManager.putInt("ID",itCount);
 
             }
 
@@ -135,14 +155,16 @@ public class MainActivity extends AppCompatActivity {
                 // notifying our adapter when child is moved.
                 apContact.notifyDataSetChanged();
                 igProgress.setVisibility(View.GONE);
+//                itCount =  apContact.getItemCount();
+//                SharedPrefManager.putInt("ID",itCount);
             }
-
-
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 apContact.notifyDataSetChanged();
                 igProgress.setVisibility(View.GONE);
+//                itCount =  apContact.getItemCount();
+//                SharedPrefManager.putInt("ID",itCount);
             }
         });
     }

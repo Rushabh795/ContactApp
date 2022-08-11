@@ -45,15 +45,14 @@ public class ContactDetailsActivity extends AppCompatActivity {
     }
 
     private void setData() {
-//        String strID = getIntent().getExtras().getString("ID");
+       String strID = getIntent().getExtras().getString("ID");
         String strFullName = getIntent().getExtras().getString("contact_FullName");
         String strMobileNum = getIntent().getExtras().getString("contact_Mobile");
         String strEmailID = getIntent().getExtras().getString("contact_Email");
         String strAddress = getIntent().getExtras().getString("contact_Address");
         String strNickName = getIntent().getExtras().getString("contact_NickName");
         firebaseDatabase = FirebaseDatabase.getInstance("https://contact-bb046-default-rtdb.firebaseio.com/");
-//        databaseReference = firebaseDatabase.getReference("Contact").child(strID);
-
+        databaseReference = firebaseDatabase.getReference("Contact").child(strID);
         tvName.setText(strFullName.toString());
         tvNickName.setText(strNickName.toString());
         edMobileNumber.setText(strMobileNum.toString());

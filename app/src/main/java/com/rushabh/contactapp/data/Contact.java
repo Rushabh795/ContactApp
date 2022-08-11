@@ -14,6 +14,25 @@ public class Contact  {
     private String strFirstName;
     private String strLastName;
 
+    public String getStrImagePath() {
+        return strImagePath;
+    }
+
+    public void setStrImagePath(String strImagePath) {
+        this.strImagePath = strImagePath;
+    }
+
+    public String getStrImageName() {
+        return strImageName;
+    }
+
+    public void setStrImageName(String strImageName) {
+        this.strImageName = strImageName;
+    }
+
+    private String strImagePath;
+    private String strImageName;
+
     public String getStrNickName() {
         return strNickName;
     }

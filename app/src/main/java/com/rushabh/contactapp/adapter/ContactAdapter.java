@@ -18,6 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.rushabh.contactapp.ContactDetailsActivity;
 import com.rushabh.contactapp.R;
 import com.rushabh.contactapp.data.Contact;
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder> {
@@ -48,6 +50,13 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         Contact contact = arrContactList.get(position);
         holder.tvContactName.setText(contact.getStrFirstName() +" " +contact.getStrLastName());
         holder.tvContactNumber.setText(contact.getStrMobileNum());
+        holder.tvContactNumber.setText(contact.getStrMobileNum());
+if(contact.getStrImagePath().trim().equals(""))
+{
+
+}else {
+    Picasso.get().load(contact.getStrImagePath()).into(holder.idIVContact);
+}
         holder.imgCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,7 +70,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
             public void onClick(View v) {
                 Intent i = new Intent(context, ContactDetailsActivity.class);
                 // on below line we are passing our contact modal
-//                i.putExtra("ID", contact.getId().toString());
+                i.putExtra("ID", contact.getId().toString());
                 i.putExtra("contact_FullName", contact.getStrFirstName().toString() + " " + contact.getStrLastName().toString());
                 i.putExtra("contact_Mobile", contact.getStrMobileNum().toString() );
                 i.putExtra("contact_Email", contact.getStrEmail().toString() );
