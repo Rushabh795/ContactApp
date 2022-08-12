@@ -15,6 +15,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.rushabh.contactapp.ContactDetailsActivity;
 import com.rushabh.contactapp.R;
 import com.rushabh.contactapp.data.Contact;
@@ -26,14 +27,12 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     // creating variables for our list, context, interface and position.
     private ArrayList<Contact> arrContactList;
     private Context context;
-    private ContactInterface contactInterface;
     int lastPos = -1;
 
     // creating a constructor.
-    public ContactAdapter(ArrayList<Contact> arrContactList, Context context, ContactInterface contactInterface) {
+    public ContactAdapter(ArrayList<Contact> arrContactList, Context context) {
         this.arrContactList = arrContactList;
         this.context = context;
-        this.contactInterface = contactInterface;
     }
 
     @NonNull
@@ -56,7 +55,12 @@ if(contact.getStrImagePath().trim().equals(""))
     holder.idIVContact.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_person));
 
 }else {
-    Picasso.get().load(contact.getStrImagePath()).rotate(270f).into(holder.idIVContact);
+
+    Glide.with(context)
+            .load(contact.getStrImagePath())
+            .override(300, 200)
+            .into(holder.idIVContact);
+
 }
         holder.imgCall.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,12 +100,6 @@ if(contact.getStrImagePath().trim().equals(""))
 //        Picasso.get().load(contact.get()).into(holder.courseIV);
         // adding animation to recycler view item on below line.
         setAnimation(holder.itemView, position);
-        holder.tvContactName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                contactInterface.onCourseClick(position);
-            }
-        });
     }
 
     private void setAnimation(View itemView, int position) {
@@ -135,7 +133,5 @@ if(contact.getStrImagePath().trim().equals(""))
     }
 
     // creating a interface for on click
-    public interface ContactInterface {
-        void onCourseClick(int position);
-    }
+
 }

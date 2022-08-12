@@ -15,8 +15,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,6 +28,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.rushabh.contactapp.data.ConnectionDetector;
 import com.rushabh.contactapp.data.Contact;
 import com.rushabh.contactapp.data.SharedPrefManager;
 import com.squareup.picasso.Picasso;
@@ -47,6 +50,8 @@ public class AddContactActivity extends AppCompatActivity {
     String imgDecodableString;
     private Uri selectedImage ;
     String strFileName="";
+    private ConnectionDetector cd;
+    private boolean isInternetPresent = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +74,9 @@ public class AddContactActivity extends AppCompatActivity {
         // find highest key
         // set tempId = highestKey+1
         contact = new Contact();
+        cd = new ConnectionDetector(AddContactActivity.this);
+        isInternetPresent = cd.isConnectingToInternet();
+
         SharedPrefManager.init(AddContactActivity.this);
         // on below line creating our database reference.
         databaseReference = firebaseDatabase.getReference().child("Contact");
@@ -83,7 +91,6 @@ public class AddContactActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 // displaying a failure message on below line.
-                Toast.makeText(AddContactActivity.this, "Fail to add Course..", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -91,13 +98,14 @@ public class AddContactActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 isAllFieldsChecked = CheckAllFields();
-                if (isAllFieldsChecked) {
-                    String strFirstName = edFirstName.getText().toString();
-                    String strLastName = edLastname.getText().toString();
-                    String strMobileNumber = edMobileNumber.getText().toString();
-                    String strEmail = edEmail.getText().toString();
-                    String strAddress = edAddress.getText().toString();
-                    String strNickName = edNickName.getText().toString();
+              if(isInternetPresent) {
+                  if (isAllFieldsChecked) {
+                      String strFirstName = edFirstName.getText().toString();
+                      String strLastName = edLastname.getText().toString();
+                      String strMobileNumber = edMobileNumber.getText().toString();
+                      String strEmail = edEmail.getText().toString();
+                      String strAddress = edAddress.getText().toString();
+                      String strNickName = edNickName.getText().toString();
 //                    databaseReference.orderByKey().limitToLast(1).addChildEventListener(new ChildEventListener() {
 //                        @Override
 //                        public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
@@ -129,36 +137,42 @@ public class AddContactActivity extends AppCompatActivity {
 //                   contact.setId(String.valueOf(itCount));
 
 
-                    tempId++;
-                    Toast.makeText(AddContactActivity.this, "Please wait contact is saving", Toast.LENGTH_SHORT).show();
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            contact.setId(String.valueOf(tempId));
-                            contact.setStrFirstName(strFirstName);
-                            contact.setStrLastName(strLastName);
-                            contact.setStrNickName(strNickName);
-                            contact.setStrMobileNum(strMobileNumber);
-                            contact.setStrEmail(strEmail);
-                            contact.setStrAdd(strAddress);
-                            String strImageName =  SharedPrefManager.getString("ImageFileName","");
-                            String strImagePath=  SharedPrefManager.getString("ImagePath","");
-                            contact.setStrImageName(strImageName);
-                            contact.setStrImagePath(strImagePath);
-                            databaseReference.child(String.valueOf(tempId)).setValue(contact);
-                            startActivity(new Intent(AddContactActivity.this, MainActivity.class));
-                            // displaying a toast message.
-                            Toast.makeText(AddContactActivity.this, "Contact Saved", Toast.LENGTH_SHORT).show();
-                            SharedPrefManager.putString("ImageFileName","");
-                            SharedPrefManager.putString("ImagePath","");
-                            //This method will be executed once the timer is over
-                            // Start your app main activity
-                            //Redirect to Splash Activity to our main Activity
-                        }
-                    }, 2000);
+                      tempId++;
+                      Snackbar snackbar = Snackbar.make(AddContactActivity.this.findViewById(android.R.id.content), "Please wait contact is saving", Snackbar.LENGTH_SHORT);
+                      snackbar.show();
+                      new Handler().postDelayed(new Runnable() {
+                          @Override
+                          public void run() {
+                              contact.setId(String.valueOf(tempId));
+                              contact.setStrFirstName(strFirstName);
+                              contact.setStrLastName(strLastName);
+                              contact.setStrNickName(strNickName);
+                              contact.setStrMobileNum(strMobileNumber);
+                              contact.setStrEmail(strEmail);
+                              contact.setStrAdd(strAddress);
+                              String strImageName = SharedPrefManager.getString("ImageFileName", "");
+                              String strImagePath = SharedPrefManager.getString("ImagePath", "");
+                              contact.setStrImageName(strImageName);
+                              contact.setStrImagePath(strImagePath);
+                              databaseReference.child(String.valueOf(tempId)).setValue(contact);
+                              startActivity(new Intent(AddContactActivity.this, MainActivity.class));
+                              // displaying a toast message.
+                              Toast.makeText(AddContactActivity.this, "Contact Saved", Toast.LENGTH_SHORT).show();
+                              SharedPrefManager.putString("ImageFileName", "");
+                              SharedPrefManager.putString("ImagePath", "");
+                              //This method will be executed once the timer is over
+                              // Start your app main activity
+                              //Redirect to Splash Activity to our main Activity
+                          }
+                      }, 2000);
 
-                    // starting a main activity.
-                }
+                      // starting a main activity.
+                  }
+              }else
+              {
+                  Snackbar snackbar = Snackbar.make(AddContactActivity.this.findViewById(android.R.id.content), "Check your connectivity", Snackbar.LENGTH_LONG);
+                  snackbar.show();
+              }
             }
         });
 
@@ -180,7 +194,10 @@ public class AddContactActivity extends AppCompatActivity {
                 // Get the Image from data
                  selectedImage = data.getData();
                  if(selectedImage != null) {
-                     Picasso.get().load(selectedImage).rotate(270f).into(imgProfilePic);
+                     Glide.with(AddContactActivity.this)
+                             .load(selectedImage)
+                             .override(300, 200)
+                             .into(imgProfilePic);
                      strFileName = System.currentTimeMillis() + "." +getFileExt(selectedImage);
                      SharedPrefManager.putString("ImageFileName",strFileName);
                      uploadFile();
@@ -214,24 +231,30 @@ private String getFileExt(Uri uri)
 
 private void uploadFile()
 {
-    if (selectedImage != null)
-    {
-        StorageReference storageReference = mStorageRef.child(strFileName);
-        storageReference.putFile(selectedImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+    if (isInternetPresent) {
+        if (selectedImage != null)
+        {
+            StorageReference storageReference = mStorageRef.child(strFileName);
+            storageReference.putFile(selectedImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                        // Download file From Firebase Storage
-                        storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri downloadPhotoUrl) {
-                                //Now play with downloadPhotoUrl
-                                //Store data into Firebase Realtime Database
-                               SharedPrefManager.putString("ImagePath",downloadPhotoUrl.toString());
-                            }
-                        });
-                    }
-                });
+                    // Download file From Firebase Storage
+                    storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri downloadPhotoUrl) {
+                            //Now play with downloadPhotoUrl
+                            //Store data into Firebase Realtime Database
+                            SharedPrefManager.putString("ImagePath",downloadPhotoUrl.toString());
+                        }
+                    });
+                }
+            });
+        }
+
+    } else {
+        Snackbar snackbar = Snackbar.make(AddContactActivity.this.findViewById(android.R.id.content), "Profile photo can not be saved because there is no connectivity.", Snackbar.LENGTH_LONG);
+        snackbar.show();
     }
 }
     private boolean CheckAllFields() {

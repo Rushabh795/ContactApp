@@ -5,11 +5,13 @@ import static android.content.ContentValues.TAG;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,9 +19,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -35,13 +40,14 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.rushabh.contactapp.data.ConnectionDetector;
 import com.rushabh.contactapp.data.Contact;
 import com.rushabh.contactapp.data.SharedPrefManager;
 import com.squareup.picasso.Picasso;
 
 public class ContactDetailsActivity extends AppCompatActivity {
     private TextInputEditText tvName ,tvNickName;
-    TextInputEditText edMobileNumber,edEmail,edAddress;
+    TextInputEditText edMobileNumber,edEmail,edAddress,edFirstName;
     ImageView ivProfile;
     MaterialButton btUpdate;
     FirebaseDatabase firebaseDatabase;
@@ -52,8 +58,11 @@ public class ContactDetailsActivity extends AppCompatActivity {
     TextView tvUpload;
     StorageReference mStorageRef;
     String strImage ,strImagName;
+    LinearLayout lvCall,lvEmail,lvAddress;
     private static int RESULT_UPDATE_IMG = 1;
-
+    private ConnectionDetector cd;
+    private boolean isInternetPresent = false;
+    private ProgressDialog progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,31 +76,104 @@ public class ContactDetailsActivity extends AppCompatActivity {
         tvNickName= findViewById(R.id.tvNickName);
         edMobileNumber = findViewById(R.id.edMobileNumber);
         edEmail = findViewById(R.id.edEmail);
+        edFirstName= findViewById(R.id.edFirstName);
         btUpdate= findViewById(R.id.btUpdate);
         edAddress = findViewById(R.id.edAddress);
         ivProfile= findViewById(R.id.ivProfile);
         tvUpload = findViewById(R.id.tvUpload);
+        lvCall= findViewById(R.id.lvCall);
+        lvEmail= findViewById(R.id.lvEmail);
+        lvAddress= findViewById(R.id.lvAddress);
+        cd = new ConnectionDetector(ContactDetailsActivity.this);
+        progress=new ProgressDialog(this);
+
+        isInternetPresent = cd.isConnectingToInternet();
          setData();
+        lvCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String strCall = edMobileNumber.getText().toString();
+                Snackbar snackbar = Snackbar
+                        .make(ContactDetailsActivity.this.findViewById(android.R.id.content), "Calling on "+ strCall, Snackbar.LENGTH_LONG);
+                snackbar.show();
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", strCall, null));
+                startActivity(intent);
+            }
+        });
+
+        lvEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String strEmail = edEmail.getText().toString();
+                if(!strEmail.isEmpty() && !strEmail.trim().equals(""))
+                {
+                    Uri uri = Uri.parse("mailto:" + strEmail)
+                            .buildUpon()
+                            .appendQueryParameter("subject", "Enter subject")
+                            .appendQueryParameter("body", "Enter body")
+                            .build();
+                    Intent emailIntent = new Intent(Intent.ACTION_SENDTO, uri);
+                    startActivity(Intent.createChooser(emailIntent, "Welcome"));
+                }else
+                {
+                    Snackbar snackbar = Snackbar
+                            .make(ContactDetailsActivity.this.findViewById(android.R.id.content), "No Email-ID for this contact", Snackbar.LENGTH_LONG);
+                    snackbar.show();
+                }
+            }
+        });
+        lvAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String strAdd = edAddress.getText().toString();
+
+
+                if(!strAdd.isEmpty() && !strAdd.trim().equals(""))
+                {
+                    String map = "http://maps.google.co.in/maps?q=" + strAdd;
+
+                    Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                            Uri.parse(map));
+                    startActivity(intent);
+                }else
+                {
+                    Snackbar snackbar = Snackbar
+                            .make(ContactDetailsActivity.this.findViewById(android.R.id.content), "No Address for this contact", Snackbar.LENGTH_LONG);
+                    snackbar.show();
+                }
+            }
+        });
+
+
 
         btUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Contact contact = new Contact();
-                contact.setId(getIntent().getExtras().getString("ID"));
-                contact.setStrFirstName(tvName.getText().toString().trim());
-                contact.setStrNickName(tvNickName.getText().toString().trim());
-                contact.setStrEmail(edEmail.getText().toString().trim());
-                contact.setStrAdd(edAddress.getText().toString().trim());
-                contact.setStrLastName(getIntent().getExtras().getString("contact_LastName"));
-                contact.setStrMobileNum(edMobileNumber.getText().toString().trim());
-                String strImageName =  SharedPrefManager.getString("ImageFileName1",strImagName);
-                String strImagePath=  SharedPrefManager.getString("ImagePath1",strImage);
-                contact.setStrImageName(strImageName);
-                contact.setStrImagePath(strImagePath);
-                databaseReference.setValue(contact);
-                Toast.makeText(ContactDetailsActivity.this,"Contact Updated",Toast.LENGTH_SHORT);
-                Intent intent = new Intent(ContactDetailsActivity.this , MainActivity.class);
-                startActivity(intent);
+                if(isInternetPresent) {
+
+                            Contact contact = new Contact();
+                            contact.setId(getIntent().getExtras().getString("ID"));
+                            contact.setStrFirstName(edFirstName.getText().toString().trim());
+                            contact.setStrLastName(tvName.getText().toString().trim());
+                            contact.setStrNickName(tvNickName.getText().toString().trim());
+                            contact.setStrEmail(edEmail.getText().toString().trim());
+                            contact.setStrAdd(edAddress.getText().toString().trim());
+                            contact.setStrMobileNum(edMobileNumber.getText().toString().trim());
+                            String strImageName = SharedPrefManager.getString("ImageFileName1", strImagName);
+                            String strImagePath = SharedPrefManager.getString("ImagePath1", strImage);
+                            contact.setStrImageName(strImageName);
+                            contact.setStrImagePath(strImagePath);
+                            databaseReference.setValue(contact);
+                            Snackbar snackbar = Snackbar.make(ContactDetailsActivity.this.findViewById(android.R.id.content), "Contact Updated", Snackbar.LENGTH_SHORT);
+                            snackbar.show();
+
+                            Intent intent = new Intent(ContactDetailsActivity.this, MainActivity.class);
+                            startActivity(intent);
+                        } else {
+                    Snackbar snackbar = Snackbar
+                            .make(ContactDetailsActivity.this.findViewById(android.R.id.content), "Please connect to Internet first", Snackbar.LENGTH_LONG);
+                    snackbar.show();
+                }
             }
         });
     }
@@ -103,7 +185,9 @@ public class ContactDetailsActivity extends AppCompatActivity {
         String strEmailID = getIntent().getExtras().getString("contact_Email");
         String strAddress = getIntent().getExtras().getString("contact_Address");
         String strNickName = getIntent().getExtras().getString("contact_NickName");
-         strImage = getIntent().getExtras().getString("contact_Image");
+        String strFirstName = getIntent().getExtras().getString("contact_Firstname");
+        String strLastName = getIntent().getExtras().getString("contact_LastName");
+        strImage = getIntent().getExtras().getString("contact_Image");
          try {
              strImagName = getIntent().getExtras().getString("contact_Image_Name");
          }catch (Exception e)
@@ -114,19 +198,23 @@ public class ContactDetailsActivity extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance("https://contact-bb046-default-rtdb.firebaseio.com/");
         databaseReference = firebaseDatabase.getReference("Contact").child(strID);
         mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
-        tvName.setText(strFullName.toString());
+        tvName.setText(strLastName.toString());
         tvNickName.setText(strNickName.toString());
         edMobileNumber.setText(strMobileNum.toString());
+        edFirstName.setText(strFirstName);
         edEmail.setText(strEmailID.toString());
         edAddress.setText(strAddress.toString());
         if(strImage.trim().equals("")) {
             ivProfile.setImageDrawable(getResources().getDrawable(R.drawable.ic_person));
         }else
     {
-        Picasso.get().load(strImage).rotate(270f).into(ivProfile);
-    }
-    }
+        Glide.with(ContactDetailsActivity.this)
+                .load(strImage)
+                .override(300, 200)
+                .into(ivProfile);
 
+    }
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
@@ -195,9 +283,18 @@ public class ContactDetailsActivity extends AppCompatActivity {
                 // Get the Image from data
                 selectedImage = data.getData();
                 if(selectedImage != null) {
-                    Picasso.get().load(selectedImage).rotate(270f).into(ivProfile);
+                    Glide.with(ContactDetailsActivity.this)
+                            .load(selectedImage)
+                            .override(300, 200)
+                            .into(ivProfile);
                     strFileName = System.currentTimeMillis() + "." +getFileExt(selectedImage);
                     SharedPrefManager.putString("ImageFileName1",strFileName);
+                    progress.setMessage("Image Uploading");
+                    progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                    progress.setIndeterminate(true);
+                    progress.setProgress(0);
+                    progress.setCancelable(false);
+                    progress.show();
                     uploadFile();
                 }else
                 {
@@ -206,12 +303,8 @@ public class ContactDetailsActivity extends AppCompatActivity {
                 }
             } else {
                 Toast.makeText(this, "You haven't picked Image", Toast.LENGTH_SHORT).show();
-
-
                 SharedPrefManager.putString("ImageFileName1",strImagName);
                 SharedPrefManager.putString("ImagePath1", strImage);
-
-
             }
         } catch (Exception e) {
             Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG).show();
@@ -237,14 +330,21 @@ public class ContactDetailsActivity extends AppCompatActivity {
             storageReference.putFile(selectedImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
                     // Download file From Firebase Storage
                     storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri downloadPhotoUrl) {
                             //Now play with downloadPhotoUrl
                             //Store data into Firebase Realtime Database
+
+                            progress.dismiss();
                             SharedPrefManager.putString("ImagePath1",downloadPhotoUrl.toString());
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progress.dismiss();
+                            Toast.makeText(ContactDetailsActivity.this, "Image not uploaded", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
