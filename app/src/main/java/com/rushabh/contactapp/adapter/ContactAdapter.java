@@ -80,8 +80,13 @@ if(contact.getStrImagePath().trim().equals(""))
                 i.putExtra("contact_LastName", contact.getStrLastName().toString() );
                 i.putExtra("contact_NickName", contact.getStrNickName().toString() );
                 i.putExtra("contact_Image", contact.getStrImagePath().toString() );
+                try {
+                    i.putExtra("contact_Image_Name", contact.getStrImageName().toString());
+                }catch (Exception E)
+                {
+                    i.putExtra("contact_Image_Name", "");
 
-
+                }
                 context.startActivity(i);
 
             }

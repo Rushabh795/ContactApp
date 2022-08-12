@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_gravity="center"
-    tools:context=".MainActivity">
+    tools:context=".ContactDetailsActivity">
 
 
     <RelativeLayout
@@ -17,10 +17,10 @@
         android:gravity="center"
        >
 
-<ImageView  android:id="@+id/ivProfile"
+        <ImageView
+            android:id="@+id/ivProfile"
             android:layout_width="fill_parent"
-            android:layout_height="180dp"
-           />
+            android:layout_height="180dp" />
     </RelativeLayout>
 
 
@@ -168,10 +168,7 @@ android:background="#fece2f"
                         android:id="@+id/tvName"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:editable="false"
-                        android:enabled="false"
-                        android:focusableInTouchMode="false"
-                        android:inputType="text">
+                              android:inputType="text">
                     </com.google.android.material.textfield.TextInputEditText>
                 </com.google.android.material.textfield.TextInputLayout>
                 <com.google.android.material.textfield.TextInputLayout
@@ -191,10 +188,7 @@ android:background="#fece2f"
                         android:id="@+id/tvNickName"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:editable="false"
-                        android:enabled="false"
-                        android:focusableInTouchMode="false"
-                        android:inputType="text">
+                           android:inputType="text">
                     </com.google.android.material.textfield.TextInputEditText>
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -221,9 +215,7 @@ android:background="#fece2f"
                    android:id="@+id/edMobileNumber"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:editable="false"
-                    android:enabled="false"
-                    android:focusableInTouchMode="false"
+
                     android:inputType="phone">
                 </com.google.android.material.textfield.TextInputEditText>
             </com.google.android.material.textfield.TextInputLayout>
@@ -244,10 +236,7 @@ android:background="#fece2f"
                    android:id="@+id/edEmail"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress"
-                    android:editable="false"
-                    android:enabled="false"
-                    android:focusableInTouchMode="false">
+                    android:inputType="textEmailAddress">
                 </com.google.android.material.textfield.TextInputEditText>
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -272,9 +261,6 @@ android:background="#fece2f"
                     android:id="@+id/edAddress"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPostalAddress"
-                    android:editable="false"
-                    android:enabled="false"
                     android:focusableInTouchMode="false">
                 </com.google.android.material.textfield.TextInputEditText>
             </com.google.android.material.textfield.TextInputLayout>
@@ -294,6 +280,7 @@ android:background="#fece2f"
         android:weightSum="1"
         >
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/btUpdate"
             style="@style/Widget.MaterialComponents.Button.Icon"
             android:layout_width="0dp"
             android:layout_weight="0.5"
@@ -307,19 +294,19 @@ android:layout_marginLeft="10dp"
             app:iconGravity="textStart"
             />
 
-        <com.google.android.material.button.MaterialButton
-            style="@style/Widget.MaterialComponents.Button.Icon"
-            android:layout_width="0dp"
-            android:layout_weight="0.5"
+        <TextView
+            android:id="@+id/tvUpload"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="5dp"
-            android:text="Whatsapp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            app:icon="@drawable/ic_save"
-            app:iconGravity="textStart"
-            />
+            android:layout_marginTop="10dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:text="Add Profile Photo"
+            android:textColor="@color/black"
+            android:onClick="loadImagefromGallery"
+            android:textSize="15sp"></TextView>
+
 
     </LinearLayout>
 
