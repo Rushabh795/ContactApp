@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Patterns;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
@@ -267,6 +268,18 @@ private void uploadFile()
             edMobileNumber.setError("Enter Number");
             return false;
         }
+
+        if (edEmail.length() == 0) {
+            edEmail.setError("Enter E-mailID");
+            return false;
+
+        }
+        if (!Patterns.EMAIL_ADDRESS.matcher(edEmail.getText().toString()).matches()){
+            edEmail.setError(" Email-ID is not proper");
+        return false;
+    }
+
+
         return true;
     }
 

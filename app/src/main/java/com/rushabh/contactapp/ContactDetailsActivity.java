@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -56,6 +57,7 @@ public class ContactDetailsActivity extends AppCompatActivity {
     private Uri selectedImage ;
     String strFileName="";
     TextView tvUpload;
+    boolean isAllFieldsChecked = false;
     StorageReference mStorageRef;
     String strImage ,strImagName;
     LinearLayout lvCall,lvEmail,lvAddress;
@@ -150,32 +152,35 @@ public class ContactDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(isInternetPresent) {
+                    isAllFieldsChecked = CheckAllFields();
+                    if (isAllFieldsChecked) {
+                        Contact contact = new Contact();
+                        contact.setId(getIntent().getExtras().getString("ID"));
+                        contact.setStrFirstName(edFirstName.getText().toString().trim());
+                        contact.setStrLastName(tvName.getText().toString().trim());
+                        contact.setStrNickName(tvNickName.getText().toString().trim());
+                        contact.setStrEmail(edEmail.getText().toString().trim());
+                        contact.setStrAdd(edAddress.getText().toString().trim());
+                        contact.setStrMobileNum(edMobileNumber.getText().toString().trim());
+                        String strImageName = SharedPrefManager.getString("ImageFileName1", strImagName);
+                        String strImagePath = SharedPrefManager.getString("ImagePath1", strImage);
+                        contact.setStrImageName(strImageName);
+                        contact.setStrImagePath(strImagePath);
+                        databaseReference.setValue(contact);
+                        Snackbar snackbar = Snackbar.make(ContactDetailsActivity.this.findViewById(android.R.id.content), "Contact Updated", Snackbar.LENGTH_SHORT);
+                        snackbar.show();
 
-                            Contact contact = new Contact();
-                            contact.setId(getIntent().getExtras().getString("ID"));
-                            contact.setStrFirstName(edFirstName.getText().toString().trim());
-                            contact.setStrLastName(tvName.getText().toString().trim());
-                            contact.setStrNickName(tvNickName.getText().toString().trim());
-                            contact.setStrEmail(edEmail.getText().toString().trim());
-                            contact.setStrAdd(edAddress.getText().toString().trim());
-                            contact.setStrMobileNum(edMobileNumber.getText().toString().trim());
-                            String strImageName = SharedPrefManager.getString("ImageFileName1", strImagName);
-                            String strImagePath = SharedPrefManager.getString("ImagePath1", strImage);
-                            contact.setStrImageName(strImageName);
-                            contact.setStrImagePath(strImagePath);
-                            databaseReference.setValue(contact);
-                            Snackbar snackbar = Snackbar.make(ContactDetailsActivity.this.findViewById(android.R.id.content), "Contact Updated", Snackbar.LENGTH_SHORT);
-                            snackbar.show();
-
-                            Intent intent = new Intent(ContactDetailsActivity.this, MainActivity.class);
-                            startActivity(intent);
-                        } else {
-                    Snackbar snackbar = Snackbar
-                            .make(ContactDetailsActivity.this.findViewById(android.R.id.content), "Please connect to Internet first", Snackbar.LENGTH_LONG);
-                    snackbar.show();
+                        Intent intent = new Intent(ContactDetailsActivity.this, MainActivity.class);
+                        startActivity(intent);
+                    } else {
+                        Snackbar snackbar = Snackbar
+                                .make(ContactDetailsActivity.this.findViewById(android.R.id.content), "Please connect to Internet first", Snackbar.LENGTH_LONG);
+                        snackbar.show();
+                    }
                 }
             }
         });
+
     }
 
     private void setData() {
@@ -350,6 +355,30 @@ public class ContactDetailsActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+    private boolean CheckAllFields() {
+        if (edFirstName.length() == 0) {
+            edFirstName.setError("Enter name");
+            return false;
+        }
+
+        if (edMobileNumber.length() == 0) {
+            edMobileNumber.setError("Enter Number");
+            return false;
+        }
+
+        if (edEmail.length() == 0) {
+            edEmail.setError("Enter E-mailID");
+            return false;
+
+        }
+        if (!Patterns.EMAIL_ADDRESS.matcher(edEmail.getText().toString()).matches()){
+            edEmail.setError(" Email-ID is not proper");
+            return false;
+        }
+
+
+        return true;
     }
 
 }
