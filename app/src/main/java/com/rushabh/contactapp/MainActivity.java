@@ -42,9 +42,6 @@ public class MainActivity extends AppCompatActivity {
     private ConnectionDetector cd;
     private boolean isInternetPresent = false;
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

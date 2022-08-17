@@ -133,7 +133,6 @@ public class ContactDetailsActivity extends AppCompatActivity {
                 if(!strAdd.isEmpty() && !strAdd.trim().equals(""))
                 {
                     String map = "http://maps.google.co.in/maps?q=" + strAdd;
-
                     Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
                             Uri.parse(map));
                     startActivity(intent);
